@@ -31,9 +31,6 @@ namespace ClientApp
         {
             try
             {
-/*                SendButton.Enabled = true;
-                SendMessageBox.Enabled = true;*/
-
                 if (NickNameBox.Text != "")
                 {
                     if (IsConnect)
