@@ -13,18 +13,16 @@ namespace ClientApp.Class
     {
         public Client()
         {
-            // Id = Guid.NewGuid().ToString();
             tcpClient = new TcpClient();
         }
 
         public string NickName;
-        // public string Id;
         public TcpClient tcpClient;
         public NetworkStream Stream;
 
         public List<string> ListMessage;
 
-        public bool IsConnect { get; set; } = false;
+        public bool IsConnect = false;
 
         private const string host = "127.0.0.1";
         private const int port = 8080;
@@ -39,8 +37,11 @@ namespace ClientApp.Class
                 ListMessage = new List<string>();
                 NickName = pNickName;
 
+                byte[] data = Encoding.UTF8.GetBytes(NickName);
+                Stream.Write(data, 0, data.Length);
+                Stream.Flush();
+
                 this.GetMessage();  // Получать сообщения и выводить их куда-то | ListMessage - список хранящий сообщения
-                this.SendMessage($"{NickName} подключился в чат!");
                 return (true);
             }
             catch
@@ -62,7 +63,6 @@ namespace ClientApp.Class
         {
             try
             {
-                this.SendMessage($"{NickName} покинул чат!");
                 Stream.Close();
                 tcpClient.Close();
                 IsConnect = false;

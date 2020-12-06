@@ -18,7 +18,6 @@ namespace ClientApp
         public Form1()
         {
             InitializeComponent();
-            Client = new Client();
         }
 
         static int port = 8080; // 8080
@@ -26,6 +25,7 @@ namespace ClientApp
 
         public Client Client;
 
+        public bool IsConnect = false;
         private string NickName = "";
         private void ConnectButton_Click(object sender, EventArgs e)
         {
@@ -34,22 +34,24 @@ namespace ClientApp
             {
                 if (NickNameBox.Text != "")
                 {
-                    if (!Client.IsConnect)
+
+                    if (!IsConnect)
                     {
+                        Client = new Client();
                         if (Client.ConnectServer(NickName))
                         {
+                            IsConnect = true;
                             NickNameBox.Enabled = false;
                             SendButton.Enabled = true;
                             SendMessageBox.Enabled = true;
                             SendMessageBox.Text = "";
                             ConnectButton.Text = "Disconnect";
-                            ///
-                            ///
-                            /// 
+                            
                         }
                     }
                     else
                     {
+                        IsConnect = false;
                         Client.DisconnectServer();
                         NickNameBox.Enabled = true;
                         SendButton.Enabled = false;
@@ -78,13 +80,10 @@ namespace ClientApp
 
         public void ListenServer()
         {
-            
-                
-
-           /* if (.ToString() != "")
-            {
-                Invoke((MethodInvoker) (() => ChatBox.Items.Add($"{}")));
-            }*/
+            /* if (.ToString() != "")
+             {
+                 Invoke((MethodInvoker) (() => ChatBox.Items.Add($"{}")));
+             }*/
             
         }
 
@@ -92,17 +91,19 @@ namespace ClientApp
         {
             try
             {
-                
-                /*if (SendMessageBox.Text != "")
+
+                if (SendMessageBox.Text != "")
                 {
-                    string Message = $"{DateTime.Now} | {NickName}: {SendMessageBox.Text}";
-                    // ClientSocket.Send(data);
+                    string Message = $"";
+                    byte[] bytes = Encoding.UTF8.GetBytes(Message);
+                    Client.Stream.Write(bytes, 0, bytes.Length);
+                    Client.Stream.Flush();
                     SendMessageBox.Text = "";
                 }
                 else
                 {
                     MessageBox.Show($"Введите сообщение!");
-                }*/
+                }
             }
             catch
             {

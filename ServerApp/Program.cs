@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ServerApp.Class;
 
 namespace ServerApp
 {
@@ -13,25 +14,35 @@ namespace ServerApp
     {
         static int port = 8080; // 8080
 
-        private static List<Socket> ListClient = new List<Socket>();
+        private static List<cClient> ListClient = new List<cClient>();
 
         static void Main(string[] args)
         {
-            IPEndPoint ipPoint = new IPEndPoint(IPAddress.Any, port); // new IPEndPoint(IPAddress.Any, port);
-            Socket listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            listenSocket.Bind(ipPoint);
-            listenSocket.Listen(10);
-
+            TcpListener ServerSocket = new TcpListener(IPAddress.Any, port);
             Console.WriteLine("Сервер запущен. Ожидание подключений...");
+            ServerSocket.Start();
+
             while (true)
             {
                 try
                 {
-                    Socket ClientSocket = listenSocket.Accept();
-                    Console.WriteLine($"IP: {ClientSocket.RemoteEndPoint}");
-                    ListClient.Add(ClientSocket);
-                    AsyncStartMethod(ClientSocket);
+                    TcpClient ClientSocket = ServerSocket.AcceptTcpClient();
+                    NetworkStream stream = ClientSocket.GetStream();
+
+                    byte[] ReadBytes = new byte[256];
+                    int length = stream.Read(ReadBytes, 0, ReadBytes.Length);
+
+                    string MessageNickName = Encoding.UTF8.GetString(ReadBytes, 0, length);
+                    cClient Client = new cClient(MessageNickName,ClientSocket);
+
+                    ListClient.Add(Client);
+
+                    string Message = $"{DateTime.Now} | {Client.NickName} подключился в чат!";
+                    Console.WriteLine($"{Message}");
+                    SendAllMessage(Client.Id, Message);
+
+                    AsyncStartMethod(Client);
+
                 }
                 catch (Exception ex)
                 {
@@ -40,57 +51,71 @@ namespace ServerApp
             }
         }
 
-        static public async void AsyncStartMethod(Socket pClientSocket)
+        static public void RemoveConnection(string Id)
         {
-            await Task.Run(() => ListenClient(pClientSocket));
+            // получаем по id закрытое подключение
+            cClient client = ListClient.FirstOrDefault(c => c.Id == Id);
+            // и удаляем его из списка подключений
+            if (client != null)
+                ListClient.Remove(client);
         }
 
-        static public void ListenClient(Socket ClientSocket)
+        static private string GetMessage(cClient Client)
         {
-            while (ClientSocket.Connected)
+            byte[] data = new byte[256]; // буфер для получаемых данных
+            StringBuilder MessageBuilder = new StringBuilder();
+            int bytes = 0;
+            do
             {
-                StringBuilder MessageBuilder = new StringBuilder();
-                int bytes = 0; // количество полученных байтов
-                byte[] data = new byte[256]; // буфер для получаемых данных
+                bytes = Client.Stream.Read(data, 0, data.Length);
+                MessageBuilder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+            }
+            while (Client.Stream.DataAvailable);
 
-                try
+            Console.WriteLine($"{MessageBuilder}");
+
+            return MessageBuilder.ToString();
+        }
+
+        static public void SendAllMessage(string Id, string Message)
+        {
+
+            byte[] bytes = Encoding.UTF8.GetBytes(Message);
+
+            for (int i = 0; i < ListClient.Count; i++)
+            {
+                
+                if (ListClient[i].Id != Id && ListClient[i].tcpClient != null)
                 {
-                    do
-                    {
-                        bytes = ClientSocket.Receive(data);
-                        MessageBuilder.Append(Encoding.UTF8.GetString(data, 0, bytes));
-                    } while (ClientSocket.Available > 0);
+                    ListClient[i].Stream.Write(bytes, 0, bytes.Length);
+                    ListClient[i].Stream.Flush();
                 }
-                catch
-                {
-                    break;
-                }
+                
+            }
+        }
 
-                if (MessageBuilder.ToString() != "")
+        static public async void AsyncStartMethod(cClient Client)
+        {
+            await Task.Run(() =>
+            {
+                while (true)
                 {
-                    Console.WriteLine($"{MessageBuilder.ToString()}");
-                    foreach (Socket Client in ListClient)
+                    if (Client.tcpClient.Connected)
                     {
-                        try
-                        {
-                            if (Client.Connected)
-                            {
-                                data = Encoding.UTF8.GetBytes(Convert.ToString(MessageBuilder));
-                                Client.Send(data);
-                            }
-                            else
-                            {
-                                Client.Shutdown(SocketShutdown.Both);
-                                Client.Close();
-                            }
-                        }
-                        catch
-                        {
-
-                        }
+                        string Message = GetMessage(Client);
+                        Message = $"{DateTime.Now} | {Client.NickName}: {Message}";
+                        SendAllMessage(Client.Id, Message);
+                    }
+                    else
+                    {
+                        string Message = $"{DateTime.Now} | {Client.NickName} покинул чат!";
+                        Console.WriteLine(Message);
+                        SendAllMessage(Client.Id, Message);
+                        RemoveConnection(Client.Id);
+                        break;
                     }
                 }
-            }
+            });
         }
     }
 }
