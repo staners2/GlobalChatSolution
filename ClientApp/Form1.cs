@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ClientApp.Class;
 
 namespace ClientApp
 {
@@ -17,70 +18,41 @@ namespace ClientApp
         public Form1()
         {
             InitializeComponent();
+            Client = new Client();
         }
 
-        static int port = 36528; // 8080
+        static int port = 8080; // 8080
         private string address = "127.0.0.1"; // 127.0.0.1
 
-        public bool IsConnect = false;
-
-        private Socket ClientSocket;
+        public Client Client;
 
         private string NickName = "";
         private void ConnectButton_Click(object sender, EventArgs e)
         {
+            NickName = NickNameBox.Text;
             try
             {
                 if (NickNameBox.Text != "")
                 {
-                    if (IsConnect)
+                    if (Client.ConnectServer(NickName))
                     {
-                        ChatBox.Items.Add($"{DateTime.Now} | Вы покинули чат ({NickName})");
-                        IsConnect = false;
+                        NickNameBox.Enabled = true;
+                        SendButton.Enabled = false;
+                        SendMessageBox.Enabled = false;
+                        SendMessageBox.Text = "";
+                        ConnectButton.Text = "Disconnect";
+                        ///
+                        ///
+                        /// 
+                    }
+                    else
+                    {
+                        Client.DisconnectServer();
                         NickNameBox.Enabled = true;
                         SendButton.Enabled = false;
                         SendMessageBox.Enabled = false;
                         SendMessageBox.Text = "";
                         ConnectButton.Text = "Connect";
-
-                        string Message = $"{DateTime.Now} | {NickName} отключился от чата!";
-                        byte[] data = Encoding.UTF8.GetBytes(Message);
-                        ClientSocket.Send(data);
-
-                        ClientSocket.Shutdown(SocketShutdown.Both);
-                        ClientSocket.Close();
-                    }
-                    else if (!IsConnect)
-                    {
-                        IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(address), port);
-                        ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                        try
-                        {
-                            // подключаемся к удаленному хосту
-                            ClientSocket.Connect(ipPoint);
-                            NickName = NickNameBox.Text;
-                            IsConnect = true;
-                            NickNameBox.Enabled = false;
-                            SendButton.Enabled = true;
-                            SendMessageBox.Enabled = true;
-                            ConnectButton.Text = "Disconnect";
-
-                            AsyncStartMethod();
-
-                            string Message = $"{DateTime.Now} | {NickName} подключился в чат!";
-                            byte[] data = Encoding.UTF8.GetBytes(Message);
-                            ClientSocket.Send(data);
-                        }
-                        catch
-                        {
-                            IsConnect = false;
-                            NickNameBox.Enabled = true;
-                            SendButton.Enabled = false;
-                            SendMessageBox.Enabled = false;
-                            SendMessageBox.Text = "";
-                            ConnectButton.Text = "Connect";
-                            MessageBox.Show("Сервер выключен!");
-                        }
                     }
                 }
                 else
@@ -103,31 +75,14 @@ namespace ClientApp
 
         public void ListenServer()
         {
-            while (ClientSocket.Connected && IsConnect)
+            
+                
+
+           /* if (.ToString() != "")
             {
-
-                StringBuilder MessageBuilder = new StringBuilder();
-                int bytes = 0; // количество полученных байтов
-                byte[] data = new byte[256]; // буфер для получаемых данных
-
-                try
-                {
-                    do
-                    {
-                        bytes = ClientSocket.Receive(data);
-                        MessageBuilder.Append(Encoding.UTF8.GetString(data, 0, bytes));
-                    } while (ClientSocket.Available > 0);
-                }
-                catch
-                {
-                    break;
-                }
-
-                if (MessageBuilder.ToString() != "")
-                {
-                    Invoke((MethodInvoker) (() => ChatBox.Items.Add($"{MessageBuilder}")));
-                }
-            }
+                Invoke((MethodInvoker) (() => ChatBox.Items.Add($"{}")));
+            }*/
+            
         }
 
         private void SendButton_Click(object sender, EventArgs e)
@@ -137,8 +92,7 @@ namespace ClientApp
                 if (SendMessageBox.Text != "")
                 {
                     string Message = $"{DateTime.Now} | {NickName}: {SendMessageBox.Text}";
-                    byte[] data = Encoding.UTF8.GetBytes(Message);
-                    ClientSocket.Send(data);
+                    // ClientSocket.Send(data);
                     SendMessageBox.Text = "";
                 }
                 else
@@ -149,7 +103,6 @@ namespace ClientApp
             catch
             {
                 ChatBox.Items.Add($"{DateTime.Now} | Сервер выключен | Вы покинули чат ({NickName})");
-                IsConnect = false;
                 NickNameBox.Enabled = true;
                 SendButton.Enabled = false;
                 SendMessageBox.Enabled = false;

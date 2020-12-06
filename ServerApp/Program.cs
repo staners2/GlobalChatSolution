@@ -11,7 +11,7 @@ namespace ServerApp
 {
     class Program
     {
-        static int port = 36528; // 8080
+        static int port = 8080; // 8080
 
         private static List<Socket> ListClient = new List<Socket>();
 
