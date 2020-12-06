@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -46,7 +48,8 @@ namespace ClientApp
                             SendMessageBox.Enabled = true;
                             SendMessageBox.Text = "";
                             ConnectButton.Text = "Disconnect";
-                            
+                            Client.ListMessage.CollectionChanged += ListMessage_Changed;
+
                         }
                     }
                     else
@@ -73,6 +76,28 @@ namespace ClientApp
             }
         }
 
+        private static void ListMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            MessageBox.Show(e.NewItems[0].ToString());
+            //Invoke((MethodInvoker)(() => ChatBox.Items.Add($"{Message}")));
+            /*switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add: // если добавление
+                    User newUser = e.NewItems[0] as User;
+                    Console.WriteLine($"Добавлен новый объект: {newUser.Name}");
+                    break;
+                case NotifyCollectionChangedAction.Remove: // если удаление
+                    User oldUser = e.OldItems[0] as User;
+                    Console.WriteLine($"Удален объект: {oldUser.Name}");
+                    break;
+                case NotifyCollectionChangedAction.Replace: // если замена
+                    User replacedUser = e.OldItems[0] as User;
+                    User replacingUser = e.NewItems[0] as User;
+                    Console.WriteLine($"Объект {replacedUser.Name} заменен объектом {replacingUser.Name}");
+                    break;
+            }*/
+        }
+
         public async void ListenServer()
         {
             await Task.Run(() => ListenServer());
@@ -83,8 +108,10 @@ namespace ClientApp
              {
                  Invoke((MethodInvoker) (() => ChatBox.Items.Add($"{}")));
              }*/
+            
+        
 
-            private void SendButton_Click(object sender, EventArgs e)
+        private void SendButton_Click(object sender, EventArgs e)
         {
             try
             {

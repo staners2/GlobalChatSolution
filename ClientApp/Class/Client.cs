@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
@@ -20,7 +22,7 @@ namespace ClientApp.Class
         public TcpClient tcpClient;
         public NetworkStream Stream;
 
-        public List<string> ListMessage;
+        public ObservableCollection<string> ListMessage { get; set; }
 
         public bool IsConnect = false;
 
@@ -34,12 +36,13 @@ namespace ClientApp.Class
                 tcpClient.Connect(host,port);
                 Stream = tcpClient.GetStream();
                 IsConnect = true;
-                ListMessage = new List<string>();
                 NickName = pNickName;
 
                 byte[] data = Encoding.UTF8.GetBytes(NickName);
                 Stream.Write(data, 0, data.Length);
                 Stream.Flush();
+
+                ListMessage = new ObservableCollection<string>();
 
                 this.GetMessage();  // Получать сообщения и выводить их куда-то | ListMessage - список хранящий сообщения
                 return (true);

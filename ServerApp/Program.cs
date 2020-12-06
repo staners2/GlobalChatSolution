@@ -97,8 +97,15 @@ namespace ServerApp
                 
                 if (ListClient[i].tcpClient != null) // ListClient[i].Id != Id
                 {
-                    ListClient[i].Stream.Write(bytes, 0, bytes.Length);
-                    ListClient[i].Stream.Flush();
+                    try
+                    {
+                        ListClient[i].Stream.Write(bytes, 0, bytes.Length);
+                        ListClient[i].Stream.Flush();
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 
             }
