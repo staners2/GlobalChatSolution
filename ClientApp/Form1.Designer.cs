@@ -33,6 +33,7 @@ namespace ClientApp
             this.SendButton = new System.Windows.Forms.Button();
             this.SendMessageBox = new System.Windows.Forms.TextBox();
             this.ChatBox = new System.Windows.Forms.ListBox();
+            this.UsersConnectionBox = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // NickNameBox
@@ -97,11 +98,22 @@ namespace ClientApp
             this.ChatBox.Size = new System.Drawing.Size(619, 334);
             this.ChatBox.TabIndex = 7;
             // 
+            // UsersConnectionBox
+            // 
+            this.UsersConnectionBox.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.UsersConnectionBox.FormattingEnabled = true;
+            this.UsersConnectionBox.ItemHeight = 22;
+            this.UsersConnectionBox.Location = new System.Drawing.Point(629, 50);
+            this.UsersConnectionBox.Name = "UsersConnectionBox";
+            this.UsersConnectionBox.Size = new System.Drawing.Size(188, 378);
+            this.UsersConnectionBox.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(638, 431);
+            this.ClientSize = new System.Drawing.Size(829, 431);
+            this.Controls.Add(this.UsersConnectionBox);
             this.Controls.Add(this.ChatBox);
             this.Controls.Add(this.SendMessageBox);
             this.Controls.Add(this.SendButton);
@@ -124,6 +136,7 @@ namespace ClientApp
         private Button SendButton;
         private TextBox SendMessageBox;
         private ListBox ChatBox;
+        private ListBox UsersConnectionBox;
     }
 }
 
