@@ -123,7 +123,7 @@ namespace ClientApp
         private Button ConnectButton;
         private Button SendButton;
         private TextBox SendMessageBox;
-        private ListBox ChatBox;
+        public ListBox ChatBox;
     }
 }
 
