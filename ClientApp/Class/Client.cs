@@ -40,7 +40,7 @@ namespace ClientApp.Class
                 NickName = pNickName;
 
                 this.GetMessage();  // Получать сообщения и выводить их куда-то | ListMessage - список хранящий сообщения
-                this.SendMessage($"{DateTime.Now} | {NickName} подключился в чат!");
+                this.SendMessage($"{NickName} подключился в чат!");
                 return (true);
             }
             catch
@@ -62,10 +62,10 @@ namespace ClientApp.Class
         {
             try
             {
-                this.SendMessage($"{DateTime.Now} | {NickName} покинул чат!");
-                IsConnect = false;
+                this.SendMessage($"{NickName} покинул чат!");
                 Stream.Close();
                 tcpClient.Close();
+                IsConnect = false;
                 return true;
             }
             catch
@@ -84,7 +84,7 @@ namespace ClientApp.Class
                     {
                         byte[] WriteBytes = new byte[256];
                         int length = Stream.Read(WriteBytes, 0, WriteBytes.Length);
-                        string Message = Encoding.UTF8.GetString(WriteBytes, 0, length);
+                        string Message = $"{DateTime.Now} | {Encoding.UTF8.GetString(WriteBytes, 0, length)}";
                         ListMessage.Add(Message);
                     }
                     catch

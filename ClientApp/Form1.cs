@@ -34,16 +34,19 @@ namespace ClientApp
             {
                 if (NickNameBox.Text != "")
                 {
-                    if (Client.ConnectServer(NickName))
+                    if (!Client.IsConnect)
                     {
-                        NickNameBox.Enabled = true;
-                        SendButton.Enabled = false;
-                        SendMessageBox.Enabled = false;
-                        SendMessageBox.Text = "";
-                        ConnectButton.Text = "Disconnect";
-                        ///
-                        ///
-                        /// 
+                        if (Client.ConnectServer(NickName))
+                        {
+                            NickNameBox.Enabled = false;
+                            SendButton.Enabled = true;
+                            SendMessageBox.Enabled = true;
+                            SendMessageBox.Text = "";
+                            ConnectButton.Text = "Disconnect";
+                            ///
+                            ///
+                            /// 
+                        }
                     }
                     else
                     {
@@ -89,7 +92,8 @@ namespace ClientApp
         {
             try
             {
-                if (SendMessageBox.Text != "")
+                
+                /*if (SendMessageBox.Text != "")
                 {
                     string Message = $"{DateTime.Now} | {NickName}: {SendMessageBox.Text}";
                     // ClientSocket.Send(data);
@@ -98,7 +102,7 @@ namespace ClientApp
                 else
                 {
                     MessageBox.Show($"Введите сообщение!");
-                }
+                }*/
             }
             catch
             {
