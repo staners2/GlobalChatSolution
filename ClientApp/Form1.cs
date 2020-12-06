@@ -73,31 +73,25 @@ namespace ClientApp
             }
         }
 
-        public async void AsyncStartMethod()
+        public async void ListenServer()
         {
             await Task.Run(() => ListenServer());
         }
 
-        public void ListenServer()
-        {
+ 
             /* if (.ToString() != "")
              {
                  Invoke((MethodInvoker) (() => ChatBox.Items.Add($"{}")));
              }*/
-            
-        }
 
-        private void SendButton_Click(object sender, EventArgs e)
+            private void SendButton_Click(object sender, EventArgs e)
         {
             try
             {
-
                 if (SendMessageBox.Text != "")
                 {
-                    string Message = $"";
-                    byte[] bytes = Encoding.UTF8.GetBytes(Message);
-                    Client.Stream.Write(bytes, 0, bytes.Length);
-                    Client.Stream.Flush();
+                    string Message = $"{SendMessageBox.Text}";
+                    Client.SendMessage(Message);
                     SendMessageBox.Text = "";
                 }
                 else

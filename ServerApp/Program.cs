@@ -38,10 +38,9 @@ namespace ServerApp
                     ListClient.Add(Client);
 
                     string Message = $"{DateTime.Now} | {Client.NickName} подключился в чат!";
-                    Console.WriteLine($"{Message}");
                     SendAllMessage(Client.Id, Message);
 
-                    AsyncStartMethod(Client);
+                    AsyncListenServer(Client);
 
                 }
                 catch (Exception ex)
@@ -53,39 +52,50 @@ namespace ServerApp
 
         static public void RemoveConnection(string Id)
         {
-            // получаем по id закрытое подключение
             cClient client = ListClient.FirstOrDefault(c => c.Id == Id);
-            // и удаляем его из списка подключений
             if (client != null)
                 ListClient.Remove(client);
         }
 
         static private string GetMessage(cClient Client)
         {
-            byte[] data = new byte[256]; // буфер для получаемых данных
             StringBuilder MessageBuilder = new StringBuilder();
-            int bytes = 0;
-            do
+            try
             {
-                bytes = Client.Stream.Read(data, 0, data.Length);
-                MessageBuilder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                byte[] data = new byte[256]; // буфер для получаемых данных
+                int bytes = 0;
+                do
+                {
+                    bytes = Client.Stream.Read(data, 0, data.Length);
+                    MessageBuilder.Append(Encoding.UTF8.GetString(data, 0, bytes));
+                }
+                while (Client.Stream.DataAvailable);
             }
-            while (Client.Stream.DataAvailable);
+            catch
+            {
+                MessageBuilder = MessageBuilder.Append("");
+            }
+            
 
-            Console.WriteLine($"{MessageBuilder}");
+            if (MessageBuilder.ToString() == "")
+            {
+                string Message = $"{DateTime.Now} | {Client.NickName} покинул чат!";
+                SendAllMessage(Client.Id, Message);
+                RemoveConnection(Client.Id);
+            }
 
             return MessageBuilder.ToString();
         }
 
         static public void SendAllMessage(string Id, string Message)
         {
-
+            Console.WriteLine(Message);
             byte[] bytes = Encoding.UTF8.GetBytes(Message);
 
             for (int i = 0; i < ListClient.Count; i++)
             {
                 
-                if (ListClient[i].Id != Id && ListClient[i].tcpClient != null)
+                if (ListClient[i].tcpClient != null) // ListClient[i].Id != Id
                 {
                     ListClient[i].Stream.Write(bytes, 0, bytes.Length);
                     ListClient[i].Stream.Flush();
@@ -94,26 +104,19 @@ namespace ServerApp
             }
         }
 
-        static public async void AsyncStartMethod(cClient Client)
+        static public async void AsyncListenServer(cClient Client)
         {
             await Task.Run(() =>
             {
                 while (true)
                 {
-                    if (Client.tcpClient.Connected)
+                    string Message = GetMessage(Client);
+                    if (Message == "")
                     {
-                        string Message = GetMessage(Client);
-                        Message = $"{DateTime.Now} | {Client.NickName}: {Message}";
-                        SendAllMessage(Client.Id, Message);
-                    }
-                    else
-                    {
-                        string Message = $"{DateTime.Now} | {Client.NickName} покинул чат!";
-                        Console.WriteLine(Message);
-                        SendAllMessage(Client.Id, Message);
-                        RemoveConnection(Client.Id);
                         break;
                     }
+                    Message = $"{DateTime.Now} | {Client.NickName}: {Message}";
+                    SendAllMessage(Client.Id, Message);
                 }
             });
         }

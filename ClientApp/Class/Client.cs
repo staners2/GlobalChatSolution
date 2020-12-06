@@ -53,8 +53,7 @@ namespace ClientApp.Class
 
         public void SendMessage(string pMessage)
         {
-            string Message = $"{DateTime.Now} | {NickName}: {pMessage}";
-            byte[] data = Encoding.UTF8.GetBytes(Message);
+            byte[] data = Encoding.UTF8.GetBytes(pMessage);
             Stream.Write(data, 0, data.Length);
             Stream.Flush();
         }
@@ -84,8 +83,9 @@ namespace ClientApp.Class
                     {
                         byte[] WriteBytes = new byte[256];
                         int length = Stream.Read(WriteBytes, 0, WriteBytes.Length);
-                        string Message = $"{DateTime.Now} | {Encoding.UTF8.GetString(WriteBytes, 0, length)}";
+                        string Message = $"{Encoding.UTF8.GetString(WriteBytes, 0, length)}";
                         ListMessage.Add(Message);
+                        //Invoke((MethodInvoker)(() => ChatBox.Items.Add($"{Message}")));
                     }
                     catch
                     {
