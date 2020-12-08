@@ -91,6 +91,12 @@ namespace ServerApp
         {
             Console.WriteLine(Message);
             byte[] bytes = Encoding.UTF8.GetBytes(Message);
+            string UserList = "USER:";
+
+            foreach (var Client in ListClient)
+            {
+                UserList = UserList + Client.NickName + '|';
+            }
 
             for (int i = 0; i < ListClient.Count; i++)
             {
@@ -101,6 +107,11 @@ namespace ServerApp
                     {
                         ListClient[i].Stream.Write(bytes, 0, bytes.Length);
                         ListClient[i].Stream.Flush();
+
+                        byte[] UserListBytes = Encoding.UTF8.GetBytes(UserList);
+                        ListClient[i].Stream.Write(UserListBytes, 0, UserListBytes.Length);
+                        ListClient[i].Stream.Flush();
+                        
                     }
                     catch
                     {

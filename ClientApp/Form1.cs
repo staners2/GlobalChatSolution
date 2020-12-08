@@ -51,6 +51,7 @@ namespace ClientApp
                             ChatBox.Items.Clear();
                             ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} подключился в чат!");
                             Client.ListMessage.CollectionChanged += ListMessage_Changed;
+                            Client.ListClient.CollectionChanged -= ListClient_Changed;
 
                         }
                     }
@@ -65,6 +66,7 @@ namespace ClientApp
                         ConnectButton.Text = "Connect";
                         ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} покинул чат!");
                         Client.ListMessage.CollectionChanged -= ListMessage_Changed;
+                        Client.ListClient.CollectionChanged -= ListClient_Changed;
                     }
                 }
                 else
@@ -82,25 +84,30 @@ namespace ClientApp
 
         private void ListMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
-            /*MessageBox.Show(e.NewItems[0].ToString());
-            ChatBox.Items.Add(e.NewItems[0]);*/
 
-            Invoke((MethodInvoker)(() =>
+            Invoke((MethodInvoker) (() =>
             {
-                if (!e.NewItems[0].ToString().Contains("CLIENT:"))
+
+                ChatBox.Items.Add(e.NewItems[0].ToString());
+                ChatBox.SetSelected(Client.ListMessage.Count - 1, true);
+                ChatBox.SetSelected(Client.ListMessage.Count - 1, false);
+
+            }));
+        }
+
+        private void ListClient_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+
+            Invoke((MethodInvoker) (() =>
+            {
+                UserBox.Items.Clear();
+                foreach (var VARIABLE in Client.ListClient)
                 {
-                    ChatBox.Items.Add(e.NewItems[0].ToString());
-                    ChatBox.SetSelected(Client.ListMessage.Count - 1, true);
-                    ChatBox.SetSelected(Client.ListMessage.Count - 1, false);
-                }
-                else
-                {
-                    
+                    UserBox.Items.Add(e.NewItems[0].ToString());
                 }
                 
             }));
-            
-            
+        }
 
             //ChatBox.Items.Add(e.NewItems[0].ToString());
             //_ChatBox.Items.Add(e.NewItems[0].ToString());
@@ -122,9 +129,9 @@ namespace ClientApp
                     Console.WriteLine($"Объект {replacedUser.Name} заменен объектом {replacingUser.Name}");
                     break;
             }*/
-        }
 
-        public async void ListenServer()
+
+            public async void ListenServer()
         {
             await Task.Run(() => ListenServer());
         }

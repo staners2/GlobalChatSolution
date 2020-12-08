@@ -23,6 +23,7 @@ namespace ClientApp.Class
         public NetworkStream Stream;
 
         public ObservableCollection<string> ListMessage { get; set; }
+        public ObservableCollection<string> ListClient { get; set; }
 
         public bool IsConnect = false;
 
@@ -43,6 +44,7 @@ namespace ClientApp.Class
                 Stream.Flush();
 
                 ListMessage = new ObservableCollection<string>();
+                ListClient = new ObservableCollection<string>();
 
                 this.GetMessage();  // Получать сообщения и выводить их куда-то | ListMessage - список хранящий сообщения
                 return (true);
@@ -87,7 +89,19 @@ namespace ClientApp.Class
                         byte[] WriteBytes = new byte[256];
                         int length = Stream.Read(WriteBytes, 0, WriteBytes.Length);
                         string Message = $"{Encoding.UTF8.GetString(WriteBytes, 0, length)}";
-                        ListMessage.Add(Message);
+                        if (Message.Contains("USER:"))
+                        {
+                            string Text = Message.ToString().Replace("USER:", "");
+                            string[] ListName = Text.Split('|');
+                            foreach (var Name in ListName)
+                            {
+                                ListClient.Add(Name);
+                            }
+                        }
+                        else
+                        {
+                            ListMessage.Add(Message);
+                        }
                         //ChatBox.Items.Add(Message);
                         //Invoke((MethodInvoker)(() => ChatBox.Items.Add($"{Message}")));
                     }
