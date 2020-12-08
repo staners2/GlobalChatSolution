@@ -88,6 +88,7 @@ namespace ClientApp.Class
                         int length = Stream.Read(WriteBytes, 0, WriteBytes.Length);
                         string Message = $"{Encoding.UTF8.GetString(WriteBytes, 0, length)}";
                         ListMessage.Add(Message);
+                        //ChatBox.Items.Add(Message);
                         //Invoke((MethodInvoker)(() => ChatBox.Items.Add($"{Message}")));
                     }
                     catch

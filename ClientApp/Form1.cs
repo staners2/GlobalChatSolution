@@ -27,8 +27,6 @@ namespace ClientApp
 
         public Client Client;
 
-        public static ListBox _ChatBox;
-
         public bool IsConnect = false;
         private string NickName = "";
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -42,7 +40,6 @@ namespace ClientApp
                     if (!IsConnect)
                     {
                         Client = new Client();
-                        _ChatBox = ChatBox;
                         if (Client.ConnectServer(NickName))
                         {
                             IsConnect = true;
@@ -51,6 +48,8 @@ namespace ClientApp
                             SendMessageBox.Enabled = true;
                             SendMessageBox.Text = "";
                             ConnectButton.Text = "Disconnect";
+                            ChatBox.Items.Clear();
+                            ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} подключился в чат!");
                             Client.ListMessage.CollectionChanged += ListMessage_Changed;
 
                         }
@@ -64,6 +63,8 @@ namespace ClientApp
                         SendMessageBox.Enabled = false;
                         SendMessageBox.Text = "";
                         ConnectButton.Text = "Connect";
+                        ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} покинул чат!");
+                        Client.ListMessage.CollectionChanged -= ListMessage_Changed;
                     }
                 }
                 else
@@ -79,10 +80,31 @@ namespace ClientApp
             }
         }
 
-        private static void ListMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        private void ListMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _ChatBox.Items.Add(e.NewItems[0].ToString());
-            MessageBox.Show(e.NewItems[0].ToString());
+            /*MessageBox.Show(e.NewItems[0].ToString());
+            ChatBox.Items.Add(e.NewItems[0]);*/
+
+            Invoke((MethodInvoker)(() =>
+            {
+                if (!e.NewItems[0].ToString().Contains("CLIENT:"))
+                {
+                    ChatBox.Items.Add(e.NewItems[0].ToString());
+                    ChatBox.SetSelected(Client.ListMessage.Count - 1, true);
+                    ChatBox.SetSelected(Client.ListMessage.Count - 1, false);
+                }
+                else
+                {
+                    
+                }
+                
+            }));
+            
+            
+
+            //ChatBox.Items.Add(e.NewItems[0].ToString());
+            //_ChatBox.Items.Add(e.NewItems[0].ToString());
+
             //Invoke((MethodInvoker)(() => ChatBox.Items.Add($"{Message}")));
             /*switch (e.Action)
             {
