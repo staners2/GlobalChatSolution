@@ -97,7 +97,7 @@ namespace ClientApp
 
         private void ListClient_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
-
+            // Bag меню подключенных пользователей
             Invoke((MethodInvoker) (() =>
             {
                 UserBox.Items.Clear();
