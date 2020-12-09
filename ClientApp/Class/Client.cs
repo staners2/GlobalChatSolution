@@ -86,12 +86,15 @@ namespace ClientApp.Class
                 {
                     try
                     {
-                        byte[] WriteBytes = new byte[256];
+                        byte[] WriteBytes = new byte[1024];
                         int length = Stream.Read(WriteBytes, 0, WriteBytes.Length);
                         string Message = $"{Encoding.UTF8.GetString(WriteBytes, 0, length)}";
                         if (Message.Contains("USER:"))
                         {
-                            string Text = Message.ToString().Replace("USER:", "");
+                            ListClient.Clear();
+                            int Index = Message.IndexOf("USER:")+6; // Кол-во символов в USER:
+                            string Text = Message.Substring(Index);
+                            // string Text = Message.Replace("USER:", "");
                             string[] ListName = Text.Split('|');
                             foreach (var Name in ListName)
                             {

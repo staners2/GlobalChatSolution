@@ -51,7 +51,7 @@ namespace ClientApp
                             ChatBox.Items.Clear();
                             ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} подключился в чат!");
                             Client.ListMessage.CollectionChanged += ListMessage_Changed;
-                            Client.ListClient.CollectionChanged -= ListClient_Changed;
+                            Client.ListClient.CollectionChanged += ListClient_Changed;
 
                         }
                     }
@@ -100,12 +100,13 @@ namespace ClientApp
             // Bag меню подключенных пользователей
             Invoke((MethodInvoker) (() =>
             {
+
                 UserBox.Items.Clear();
                 foreach (var VARIABLE in Client.ListClient)
                 {
                     UserBox.Items.Add(e.NewItems[0].ToString());
                 }
-                
+
             }));
         }
 

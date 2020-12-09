@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -29,7 +30,7 @@ namespace ServerApp
                     TcpClient ClientSocket = ServerSocket.AcceptTcpClient();
                     NetworkStream stream = ClientSocket.GetStream();
 
-                    byte[] ReadBytes = new byte[256];
+                    byte[] ReadBytes = new byte[1024];
                     int length = stream.Read(ReadBytes, 0, ReadBytes.Length);
 
                     string MessageNickName = Encoding.UTF8.GetString(ReadBytes, 0, length);
@@ -62,7 +63,7 @@ namespace ServerApp
             StringBuilder MessageBuilder = new StringBuilder();
             try
             {
-                byte[] data = new byte[256]; // буфер для получаемых данных
+                byte[] data = new byte[1024]; // буфер для получаемых данных
                 int bytes = 0;
                 do
                 {
@@ -95,7 +96,7 @@ namespace ServerApp
 
             foreach (var Client in ListClient)
             {
-                UserList = UserList + Client.NickName + '|';
+                UserList = UserList + '|' + Client.NickName;
             }
 
             for (int i = 0; i < ListClient.Count; i++)
