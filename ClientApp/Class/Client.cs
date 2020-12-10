@@ -92,7 +92,7 @@ namespace ClientApp.Class
                         if (Message.Contains("USER:"))
                         {
                             ListClient.Clear();
-                            int Index = Message.IndexOf("USER:")+6; // Кол-во символов в USER:
+                            int Index = Message.IndexOf("USER:")+5; // Кол-во символов в USER:
                             string Text = Message.Substring(Index);
                             // string Text = Message.Replace("USER:", "");
                             string[] ListName = Text.Split('|');

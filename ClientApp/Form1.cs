@@ -87,7 +87,6 @@ namespace ClientApp
 
             Invoke((MethodInvoker) (() =>
             {
-
                 ChatBox.Items.Add(e.NewItems[0].ToString());
                 ChatBox.SetSelected(Client.ListMessage.Count - 1, true);
                 ChatBox.SetSelected(Client.ListMessage.Count - 1, false);
