@@ -26,8 +26,8 @@ namespace ClientApp.Class
 
         public bool IsConnect = false;
 
-        private const string host = "127.0.0.1";
-        private const int port = 8080;
+        private const string host = "127.0.0.1"; // 127.0.0.1
+        private const int port = 8080;  // 8080
 
         public bool ConnectServer(string pNickName)
         {
