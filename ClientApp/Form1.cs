@@ -20,6 +20,7 @@ namespace ClientApp
         public Form1()
         {
             InitializeComponent();
+            Client = new Client();
         }
 
         static int port = 8080; // 8080
@@ -36,13 +37,10 @@ namespace ClientApp
             {
                 if (NickNameBox.Text != "")
                 {
-
-                    if (!IsConnect)
+                    if (!Client.IsConnect)
                     {
-                        Client = new Client();
                         if (Client.ConnectServer(NickName))
                         {
-                            IsConnect = true;
                             NickNameBox.Enabled = false;
                             SendButton.Enabled = true;
                             SendMessageBox.Enabled = true;
@@ -56,7 +54,6 @@ namespace ClientApp
                     }
                     else
                     {
-                        IsConnect = false;
                         Client.DisconnectServer();
                         NickNameBox.Enabled = true;
                         SendButton.Enabled = false;
@@ -82,9 +79,6 @@ namespace ClientApp
 
         private void ListMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
-            /*MessageBox.Show(e.NewItems[0].ToString());
-            ChatBox.Items.Add(e.NewItems[0]);*/
-
             Invoke((MethodInvoker)(() =>
             {
                 if (!e.NewItems[0].ToString().Contains("CLIENT:"))
@@ -93,14 +87,7 @@ namespace ClientApp
                     ChatBox.SetSelected(Client.ListMessage.Count - 1, true);
                     ChatBox.SetSelected(Client.ListMessage.Count - 1, false);
                 }
-                else
-                {
-                    
-                }
-                
             }));
-            
-            
 
             //ChatBox.Items.Add(e.NewItems[0].ToString());
             //_ChatBox.Items.Add(e.NewItems[0].ToString());
@@ -129,7 +116,6 @@ namespace ClientApp
             await Task.Run(() => ListenServer());
         }
 
- 
             /* if (.ToString() != "")
              {
                  Invoke((MethodInvoker) (() => ChatBox.Items.Add($"{}")));
@@ -158,6 +144,7 @@ namespace ClientApp
                 NickNameBox.Enabled = true;
                 SendButton.Enabled = false;
                 SendMessageBox.Enabled = false;
+                Client.IsConnect = false;
                 SendMessageBox.Text = "";
                 ConnectButton.Text = "Connect";
             }

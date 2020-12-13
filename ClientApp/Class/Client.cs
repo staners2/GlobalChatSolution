@@ -15,7 +15,7 @@ namespace ClientApp.Class
     {
         public Client()
         {
-            tcpClient = new TcpClient();
+            /*tcpClient = new TcpClient();*/
         }
 
         public string NickName;
@@ -31,6 +31,7 @@ namespace ClientApp.Class
 
         public bool ConnectServer(string pNickName)
         {
+            tcpClient = new TcpClient();
             try
             {
                 tcpClient.Connect(host,port);

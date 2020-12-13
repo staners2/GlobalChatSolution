@@ -54,7 +54,10 @@ namespace ServerApp
         {
             cClient client = ListClient.FirstOrDefault(c => c.Id == Id);
             if (client != null)
+            {
                 ListClient.Remove(client);
+            }
+                
         }
 
         static private string GetMessage(cClient Client)
