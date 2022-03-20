@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -37,9 +38,20 @@ namespace ServerApp
 
                     ListClient.Add(Client);
 
-                    string Message = $"{DateTime.Now} | {Client.NickName} подключился в чат!";
-                    SendAllMessage(Client.Id, Message);
+                    string Message = $"{DateTime.Now} | {Client.NickName} <<< подключился в чат!";
+                    Console.WriteLine(Message);
 
+                    Process cmd = new Process();
+                    cmd.StartInfo.RedirectStandardOutput = true;
+                    cmd.StartInfo.UseShellExecute = false;
+                    cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    cmd.StartInfo.FileName = "py";
+                    cmd.StartInfo.Arguments = $"C:\\Users\\Дима\\Desktop\\chat\\crypt.py --e --m \"{Message}\"";
+                    cmd.Start();
+                    cmd.WaitForExit();
+                    string result_message = cmd.StandardOutput.ReadToEnd();
+
+                    SendAllMessage(Client.Id, result_message);
                     AsyncListenServer(Client);
 
                 }
@@ -79,8 +91,20 @@ namespace ServerApp
 
             if (MessageBuilder.ToString() == "")
             {
-                string Message = $"{DateTime.Now} | {Client.NickName} покинул чат!";
-                SendAllMessage(Client.Id, Message);
+                string Message = $"{DateTime.Now} | {Client.NickName} <<< покинул чат!";
+                Console.WriteLine(Message);
+
+                Process cmd = new Process();
+                cmd.StartInfo.RedirectStandardOutput = true;
+                cmd.StartInfo.UseShellExecute = false;
+                cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                cmd.StartInfo.FileName = "py";
+                cmd.StartInfo.Arguments = $"C:\\Users\\Дима\\Desktop\\chat\\crypt.py --e --m \"{Message}\"";
+                cmd.Start();
+                cmd.WaitForExit();
+                string result_message = cmd.StandardOutput.ReadToEnd();
+
+                SendAllMessage(Client.Id, result_message);
                 RemoveConnection(Client.Id);
             }
 
@@ -89,7 +113,6 @@ namespace ServerApp
 
         static public void SendAllMessage(string Id, string Message)
         {
-            Console.WriteLine(Message);
             byte[] bytes = Encoding.UTF8.GetBytes(Message);
 
             for (int i = 0; i < ListClient.Count; i++)
@@ -122,8 +145,26 @@ namespace ServerApp
                     {
                         break;
                     }
-                    Message = $"{DateTime.Now} | {Client.NickName}: {Message}";
-                    SendAllMessage(Client.Id, Message);
+
+                    Process cmd = new Process();
+                    cmd.StartInfo.RedirectStandardOutput = true;
+                    cmd.StartInfo.UseShellExecute = false;
+                    cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    cmd.StartInfo.FileName = "py";
+                    cmd.StartInfo.Arguments = $"C:\\Users\\Дима\\Desktop\\chat\\crypt.py --m \"{Message}\"";
+                    cmd.Start();
+                    cmd.WaitForExit();
+                    string result_message = cmd.StandardOutput.ReadToEnd();
+
+                    Message = $"{DateTime.Now} | {Client.NickName} => {result_message}";
+                    Console.WriteLine(Message);
+
+                    cmd.StartInfo.Arguments = $"C:\\Users\\Дима\\Desktop\\chat\\crypt.py --e --m \"{Message}\"";
+                    cmd.Start();
+                    cmd.WaitForExit();
+                    string res = cmd.StandardOutput.ReadToEnd();
+
+                    SendAllMessage(Client.Id, res);
                 }
             });
         }

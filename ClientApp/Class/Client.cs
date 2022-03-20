@@ -59,9 +59,12 @@ namespace ClientApp.Class
         {
             Process cmd = new Process();
             cmd.StartInfo.RedirectStandardOutput = true;
-            cmd.StartInfo.FileName = "python3";
-            cmd.StartInfo.Arguments = $"/Users/staners2/Desktop/GlobalChatSolution/crypt.py --e --m {pMessage}";
+            cmd.StartInfo.UseShellExecute = false;
+            cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            cmd.StartInfo.FileName = "py";
+            cmd.StartInfo.Arguments = $"C:\\Users\\Дима\\Desktop\\chat\\crypt.py --e --m \"{pMessage}\"";
             cmd.Start();
+            cmd.WaitForExit();
             string result = cmd.StandardOutput.ReadToEnd();
 
             byte[] data = Encoding.UTF8.GetBytes(result);
@@ -92,18 +95,22 @@ namespace ClientApp.Class
                 {
                     try
                     {
+                        
                         byte[] WriteBytes = new byte[256];
                         int length = Stream.Read(WriteBytes, 0, WriteBytes.Length);
                         string Message = $"{Encoding.UTF8.GetString(WriteBytes, 0, length)}";
 
                         Process cmd = new Process();
                         cmd.StartInfo.RedirectStandardOutput = true;
-                        cmd.StartInfo.FileName = "python3";
-                        cmd.StartInfo.Arguments = $"/Users/staners2/Desktop/GlobalChatSolution/crypt.py --m {Message}";
+                        cmd.StartInfo.UseShellExecute = false;
+                        cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                        cmd.StartInfo.FileName = "py";
+                        cmd.StartInfo.Arguments = $"C:\\Users\\Дима\\Desktop\\chat\\crypt.py --m \"{Message}\"";
                         cmd.Start();
-                        string result = cmd.StandardOutput.ReadToEnd();
+                        cmd.WaitForExit();
+                        string decode_message = cmd.StandardOutput.ReadToEnd();
 
-                        ListMessage.Add(Message);
+                        ListMessage.Add($"{decode_message}");
                         //ChatBox.Items.Add(Message);
                         //Invoke((MethodInvoker)(() => ChatBox.Items.Add($"{Message}")));
                     }
