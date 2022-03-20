@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -56,7 +57,14 @@ namespace ClientApp.Class
 
         public void SendMessage(string pMessage)
         {
-            byte[] data = Encoding.UTF8.GetBytes(pMessage);
+            Process cmd = new Process();
+            cmd.StartInfo.RedirectStandardOutput = true;
+            cmd.StartInfo.FileName = "python3";
+            cmd.StartInfo.Arguments = $"/Users/staners2/Desktop/GlobalChatSolution/crypt.py --e --m {pMessage}";
+            cmd.Start();
+            string result = cmd.StandardOutput.ReadToEnd();
+
+            byte[] data = Encoding.UTF8.GetBytes(result);
             Stream.Write(data, 0, data.Length);
             Stream.Flush();
         }
@@ -87,6 +95,14 @@ namespace ClientApp.Class
                         byte[] WriteBytes = new byte[256];
                         int length = Stream.Read(WriteBytes, 0, WriteBytes.Length);
                         string Message = $"{Encoding.UTF8.GetString(WriteBytes, 0, length)}";
+
+                        Process cmd = new Process();
+                        cmd.StartInfo.RedirectStandardOutput = true;
+                        cmd.StartInfo.FileName = "python3";
+                        cmd.StartInfo.Arguments = $"/Users/staners2/Desktop/GlobalChatSolution/crypt.py --m {Message}";
+                        cmd.Start();
+                        string result = cmd.StandardOutput.ReadToEnd();
+
                         ListMessage.Add(Message);
                         //ChatBox.Items.Add(Message);
                         //Invoke((MethodInvoker)(() => ChatBox.Items.Add($"{Message}")));
