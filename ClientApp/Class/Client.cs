@@ -62,7 +62,7 @@ namespace ClientApp.Class
             cmd.StartInfo.UseShellExecute = false;
             cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             cmd.StartInfo.FileName = "py";
-            cmd.StartInfo.Arguments = $"C:\\Users\\Дима\\Desktop\\chat\\crypt.py --e --m \"{pMessage}\"";
+            cmd.StartInfo.Arguments = $"C:\\Users\\staners2\\Desktop\\crypt.py --e --m \"{pMessage}\"";
             cmd.Start();
             cmd.WaitForExit();
             string result = cmd.StandardOutput.ReadToEnd();
@@ -105,7 +105,7 @@ namespace ClientApp.Class
                         cmd.StartInfo.UseShellExecute = false;
                         cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                         cmd.StartInfo.FileName = "py";
-                        cmd.StartInfo.Arguments = $"C:\\Users\\Дима\\Desktop\\chat\\crypt.py --m \"{Message}\"";
+                        cmd.StartInfo.Arguments = $"C:\\Users\\staners2\\Desktop\\crypt.py --m \"{Message}\"";
                         cmd.Start();
                         cmd.WaitForExit();
                         string decode_message = cmd.StandardOutput.ReadToEnd();
