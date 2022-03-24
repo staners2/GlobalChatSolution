@@ -20,8 +20,9 @@ namespace ServerApp
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            TcpListener ServerSocket = new TcpListener(IPAddress.Any, port);
-            Console.WriteLine("Сервер запущен. Ожидание подключений...");
+            var IP = IPAddress.Any;
+            TcpListener ServerSocket = new TcpListener(IP, port);
+            Console.WriteLine($"Сервер запущен на IP => {IP}:{port} . Ожидание подключений...");
             ServerSocket.Start();
 
             while (true)

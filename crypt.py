@@ -16,13 +16,13 @@ def append_to_size(word: str, length: int):
     return word[0:length]
 
 def encrypt(text, key):
-    l = [a ^ b for (a, b) in zip(bytes(text, 'utf-8'), cycle(bytes(key, 'utf-8')))]
+    l = [a ^ b for (a, b) in zip(bytes(text, 'utf-8'), bytes(key, 'utf-8'))] # 16 разрядов
     return ",".join(str(x) for x in l)
 
 
 def descrypt(text, key):
     l = [int(x) for x in text.split(",")]
-    return bytes([a ^ b for (a, b) in zip(bytes(l), cycle(bytes(key, 'utf-8')))]).decode()
+    return bytes([a ^ b for (a, b) in zip(bytes(l), bytes(key, 'utf-8'))]).decode()
 
 if __name__ == "__main__":
     deafult_key = "key"
