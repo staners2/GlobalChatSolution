@@ -14,7 +14,7 @@ namespace ServerApp
     class Program
     {
         static int port = 8080; // 8080
-        static string address = "172.20.10.6";
+        static string address = "127.0.0.1";
 
         private static List<cClient> ListClient = new List<cClient>();
 

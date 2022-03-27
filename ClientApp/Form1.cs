@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ClientApp.Class;
@@ -32,13 +33,13 @@ namespace ClientApp
             NickName = NickNameBox.Text;
             try
             {
-                if (NickNameBox.Text != "")
+                if (NickNameBox.Text != "" && IpBox.Text != "" && new Regex(@"((1\d\d|2([0-4]\d|5[0-5])|\D\d\d?)\.?){4}$").IsMatch(IpBox.Text))
                 {
 
                     if (!IsConnect)
                     {
                         Client = new Client();
-                        if (Client.ConnectServer(NickName))
+                        if (Client.ConnectServer(NickName, IpBox.Text))
                         {
                             IsConnect = true;
                             NickNameBox.Enabled = false;
@@ -67,7 +68,7 @@ namespace ClientApp
                 }
                 else
                 {
-                    MessageBox.Show("Введите ваш NickName для подключения к чату",
+                    MessageBox.Show("Введите ваш NickName или IP для подключения к чату",
                         "Error", MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }

@@ -33,6 +33,8 @@ namespace ClientApp
             this.SendButton = new System.Windows.Forms.Button();
             this.SendMessageBox = new System.Windows.Forms.TextBox();
             this.ChatBox = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.IpBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // NickNameBox
@@ -41,7 +43,7 @@ namespace ClientApp
             this.NickNameBox.Location = new System.Drawing.Point(105, 9);
             this.NickNameBox.Multiline = true;
             this.NickNameBox.Name = "NickNameBox";
-            this.NickNameBox.Size = new System.Drawing.Size(338, 35);
+            this.NickNameBox.Size = new System.Drawing.Size(156, 35);
             this.NickNameBox.TabIndex = 0;
             // 
             // label1
@@ -97,11 +99,32 @@ namespace ClientApp
             this.ChatBox.Size = new System.Drawing.Size(619, 334);
             this.ChatBox.TabIndex = 7;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Trebuchet MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(267, 14);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(26, 24);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "IP";
+            // 
+            // IpBox
+            // 
+            this.IpBox.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.IpBox.Location = new System.Drawing.Point(299, 9);
+            this.IpBox.Multiline = true;
+            this.IpBox.Name = "IpBox";
+            this.IpBox.Size = new System.Drawing.Size(138, 35);
+            this.IpBox.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(631, 431);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.IpBox);
             this.Controls.Add(this.ChatBox);
             this.Controls.Add(this.SendMessageBox);
             this.Controls.Add(this.SendButton);
@@ -124,6 +147,8 @@ namespace ClientApp
         private Button SendButton;
         private TextBox SendMessageBox;
         public ListBox ChatBox;
+        private Label label2;
+        private TextBox IpBox;
     }
 }
 

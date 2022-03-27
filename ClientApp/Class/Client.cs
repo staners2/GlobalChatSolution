@@ -27,14 +27,13 @@ namespace ClientApp.Class
 
         public bool IsConnect = false;
 
-        private const string host = "172.20.10.6";
         private const int port = 8080;
 
-        public bool ConnectServer(string pNickName)
+        public bool ConnectServer(string pNickName, string IP)
         {
             try
             {
-                tcpClient.Connect(host,port);
+                tcpClient.Connect(IP, port);
                 Stream = tcpClient.GetStream();
                 IsConnect = true;
                 NickName = pNickName;
