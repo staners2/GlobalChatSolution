@@ -23,9 +23,6 @@ namespace ClientApp
             InitializeComponent();
         }
 
-        static int port = 8080; // 8080
-        private string address = "192.168.129.129"; // 127.0.0.1
-
         public Client Client;
 
         public bool IsConnect = false;

@@ -14,13 +14,14 @@ namespace ServerApp
     class Program
     {
         static int port = 8080; // 8080
+        static string address = "172.20.10.6";
 
         private static List<cClient> ListClient = new List<cClient>();
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            var IP = IPAddress.Any;
+            var IP = IPAddress.Parse(address);
             TcpListener ServerSocket = new TcpListener(IP, port);
             Console.WriteLine($"Сервер запущен на IP => {IP}:{port} . Ожидание подключений...");
             ServerSocket.Start();
