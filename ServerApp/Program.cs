@@ -40,7 +40,7 @@ namespace ServerApp
 
                     ListClient.Add(Client);
 
-                    string Message = $"{DateTime.Now} | {Client.NickName} <<< подключился в чат";
+                    string Message = $"{DateTime.Now} | {Client.NickName} connect in chat";
                     Console.WriteLine(Message);
 
                     Process cmd = new Process();
@@ -93,7 +93,7 @@ namespace ServerApp
 
             if (MessageBuilder.ToString() == "")
             {
-                string Message = $"{DateTime.Now} | {Client.NickName} <<< покинул чат";
+                string Message = $"{DateTime.Now} | {Client.NickName} leave the chat";
                 Console.WriteLine(Message);
 
                 Process cmd = new Process();

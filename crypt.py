@@ -16,23 +16,28 @@ def append_to_size(word: str, length: int):
     return word[0:length]
 
 def encrypt(text, key):
-    l = [a ^ b for (a, b) in zip(bytes(text, 'utf-8'), bytes(key, 'utf-8'))] # UTF-8 в двоичном виде
+    key = append_to_size(key, len(text))
+    # print(f"text: {text}\n key: {key}")
+    l = [a ^ b for (a, b) in zip(bytes(text, "UTF-8"), bytes(key, "UTF-8"))]  # UTF-8 в двоичном виде
     return ",".join(str(x) for x in l)
 
 
 def descrypt(text, key):
     l = [int(x) for x in text.split(",")]
-    return bytes([a ^ b for (a, b) in zip(bytes(l), bytes(key, 'utf-8'))]).decode()
+    key = append_to_size(key, len(l))
+    # print(f"text: {text}\n key: {key}")
+    byt =  bytes([a ^ b for (a, b) in zip(bytes(l), bytes(key, "UTF-8"))])
+    return byt.decode('UTF-8')
 
 if __name__ == "__main__":
     deafult_key = "key"
     if len(sys.argv) > 1:
         params = createParser().parse_args()
         text = params.message
-        key = append_to_size(deafult_key, len(text))
+        
         if params.e:
-            print(encrypt(text, key))
+            print(encrypt(text, deafult_key))
         else:
-            print(descrypt(text, key))
+            print(descrypt(text, deafult_key))
     else:
         exit(1)

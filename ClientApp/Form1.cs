@@ -48,7 +48,7 @@ namespace ClientApp
                             SendMessageBox.Text = "";
                             ConnectButton.Text = "Disconnect";
                             ChatBox.Items.Clear();
-                            ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} подключился в чат");
+                            // ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} connect the chat");
                             Client.ListMessage.CollectionChanged += ListMessage_Changed;
 
                         }
@@ -62,7 +62,7 @@ namespace ClientApp
                         SendMessageBox.Enabled = false;
                         SendMessageBox.Text = "";
                         ConnectButton.Text = "Connect";
-                        ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} покинул чат");
+                        ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} leave chat");
                         Client.ListMessage.CollectionChanged -= ListMessage_Changed;
                     }
                 }
@@ -138,6 +138,11 @@ namespace ClientApp
 
         private void SendButton_Click(object sender, EventArgs e)
         {
+            this.SendMessage();
+        }
+
+        private void SendMessage()
+        {
             try
             {
                 if (SendMessageBox.Text != "")
@@ -153,12 +158,20 @@ namespace ClientApp
             }
             catch
             {
-                ChatBox.Items.Add($"{DateTime.Now} | Сервер выключен | Вы покинули чат ({NickName})");
+                ChatBox.Items.Add($"{DateTime.Now} | Server closed | You leave chat ({NickName})");
                 NickNameBox.Enabled = true;
                 SendButton.Enabled = false;
                 SendMessageBox.Enabled = false;
                 SendMessageBox.Text = "";
                 ConnectButton.Text = "Connect";
+            }
+        }
+
+        private void SendMessageBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                this.SendMessage();
             }
         }
     }

@@ -88,6 +88,7 @@ namespace ClientApp
             this.SendMessageBox.Name = "SendMessageBox";
             this.SendMessageBox.Size = new System.Drawing.Size(494, 35);
             this.SendMessageBox.TabIndex = 4;
+            this.SendMessageBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SendMessageBox_KeyDown);
             // 
             // ChatBox
             // 
