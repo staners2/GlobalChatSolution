@@ -48,7 +48,7 @@ namespace ClientApp
                             SendMessageBox.Text = "";
                             ConnectButton.Text = "Disconnect";
                             ChatBox.Items.Clear();
-                            ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} подключился в чат!");
+                            ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} подключился в чат");
                             Client.ListMessage.CollectionChanged += ListMessage_Changed;
 
                         }
@@ -62,7 +62,7 @@ namespace ClientApp
                         SendMessageBox.Enabled = false;
                         SendMessageBox.Text = "";
                         ConnectButton.Text = "Connect";
-                        ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} покинул чат!");
+                        ChatBox.Items.Add($"{DateTime.Now} | {Client.NickName} покинул чат");
                         Client.ListMessage.CollectionChanged -= ListMessage_Changed;
                     }
                 }
@@ -148,7 +148,7 @@ namespace ClientApp
                 }
                 else
                 {
-                    MessageBox.Show($"Введите сообщение!");
+                    MessageBox.Show($"Введите сообщение");
                 }
             }
             catch

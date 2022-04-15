@@ -16,7 +16,7 @@ def append_to_size(word: str, length: int):
     return word[0:length]
 
 def encrypt(text, key):
-    l = [a ^ b for (a, b) in zip(bytes(text, 'utf-8'), bytes(key, 'utf-8'))] # 16 разрядов
+    l = [a ^ b for (a, b) in zip(bytes(text, 'utf-8'), bytes(key, 'utf-8'))] # UTF-8 в двоичном виде
     return ",".join(str(x) for x in l)
 
 

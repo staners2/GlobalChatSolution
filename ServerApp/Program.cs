@@ -14,16 +14,15 @@ namespace ServerApp
     class Program
     {
         static int port = 8080; // 8080
-        static string address = "127.0.0.1";
 
         private static List<cClient> ListClient = new List<cClient>();
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            var IP = IPAddress.Parse(address);
+            var IP = IPAddress.Any;
             TcpListener ServerSocket = new TcpListener(IP, port);
-            Console.WriteLine($"Сервер запущен на IP => {IP}:{port} . Ожидание подключений...");
+            Console.WriteLine($"Сервер запущен на IP => {IP.Address}:{port} . Ожидание подключений...");
             ServerSocket.Start();
 
             while (true)
@@ -41,7 +40,7 @@ namespace ServerApp
 
                     ListClient.Add(Client);
 
-                    string Message = $"{DateTime.Now} | {Client.NickName} <<< подключился в чат!";
+                    string Message = $"{DateTime.Now} | {Client.NickName} <<< подключился в чат";
                     Console.WriteLine(Message);
 
                     Process cmd = new Process();
@@ -49,7 +48,7 @@ namespace ServerApp
                     cmd.StartInfo.UseShellExecute = false;
                     cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     cmd.StartInfo.FileName = "py";
-                    cmd.StartInfo.Arguments = $"C:\\Users\\staners2\\Desktop\\crypt.py --e --m \"{Message}\"";
+                    cmd.StartInfo.Arguments = $"crypt.py --e --m \"{Message}\"";
                     cmd.Start();
                     cmd.WaitForExit();
                     string result_message = cmd.StandardOutput.ReadToEnd();
@@ -94,7 +93,7 @@ namespace ServerApp
 
             if (MessageBuilder.ToString() == "")
             {
-                string Message = $"{DateTime.Now} | {Client.NickName} <<< покинул чат!";
+                string Message = $"{DateTime.Now} | {Client.NickName} <<< покинул чат";
                 Console.WriteLine(Message);
 
                 Process cmd = new Process();
@@ -102,7 +101,7 @@ namespace ServerApp
                 cmd.StartInfo.UseShellExecute = false;
                 cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 cmd.StartInfo.FileName = "py";
-                cmd.StartInfo.Arguments = $"C:\\Users\\staners2\\Desktop\\crypt.py --e --m \"{Message}\"";
+                cmd.StartInfo.Arguments = $"crypt.py --e --m \"{Message}\"";
                 cmd.Start();
                 cmd.WaitForExit();
                 string result_message = cmd.StandardOutput.ReadToEnd();
@@ -154,7 +153,7 @@ namespace ServerApp
                     cmd.StartInfo.UseShellExecute = false;
                     cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     cmd.StartInfo.FileName = "py";
-                    cmd.StartInfo.Arguments = $"C:\\Users\\staners2\\Desktop\\crypt.py --m \"{Message}\"";
+                    cmd.StartInfo.Arguments = $"crypt.py --m \"{Message}\"";
                     cmd.Start();
                     cmd.WaitForExit();
                     string result_message = cmd.StandardOutput.ReadToEnd();
@@ -162,10 +161,11 @@ namespace ServerApp
                     Message = $"{DateTime.Now} | {Client.NickName} => {result_message}";
                     Console.WriteLine(Message);
 
-                    cmd.StartInfo.Arguments = $"C:\\Users\\staners2\\Desktop\\crypt.py --e --m \"{Message}\"";
+                    cmd.StartInfo.Arguments = $"crypt.py --e --m \"{Message}\"";
                     cmd.Start();
                     cmd.WaitForExit();
                     string res = cmd.StandardOutput.ReadToEnd();
+                    Console.WriteLine(res);
 
                     SendAllMessage(Client.Id, res);
                 }
